@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Crime Listing</h1>
+
+{% if crimes %}
+<div id="map"></div>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+<script>
+  var map = L.map('map').setView([23.531019, 87.335536], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  var crimes = [
+    {% for crime in crimes %}
+      {
+        location: "{{ crime.location }}",
+        time: "{{ crime.time }}",
+        date: "{{ crime.date }}",
+        description: "{{ crime.description }}"
+      },
+    {% endfor %}
+  ];
+
+  for (var i = 0; i < crimes.length; i++) {
+    var crime = crimes[i];
+    var locationCoords = crime.location.split(',');
+    obj={};
+    obj.lat = locationCoords[0];
+    obj.lon = locationCoords[1];
+    var marker = L.marker(obj).addTo(map);
+    marker.bindPopup(`<strong>Time:</strong> ${crime.time}<br><strong>Date:</strong> ${crime.date}<br><strong>Description:</strong> ${crime.description}`);
+  }
+</script>
+{% else %}
+<h1>No crimes reported yet.</h1>
+{% endif %} {% endblock %}

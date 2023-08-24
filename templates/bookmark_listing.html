@@ -1,0 +1,7 @@
+{% for bookmark in bookmarks %}
+<p>
+  {{ bookmark.crime.location }} - {{ bookmark.crime.date }} - {{
+  bookmark.crime.time }}
+</p>
+<p>{{ bookmark.crime.description }}</p>
+{% endfor %}
